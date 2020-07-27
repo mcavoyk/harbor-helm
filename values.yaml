@@ -240,9 +240,9 @@ imagePullSecrets:
 #  - name: docker-registry-secret
 #  - name: internal-registry-secret
 
-# The update strategy for deployments with persistent volumes(jobservice, registry 
+# The update strategy for deployments with persistent volumes(jobservice, registry
 # and chartmuseum): "RollingUpdate" or "Recreate"
-# Set it as "Recreate" when "RWM" for volumes isn't supported 
+# Set it as "Recreate" when "RWM" for volumes isn't supported
 updateStrategy:
   type: RollingUpdate
 
@@ -333,6 +333,11 @@ core:
   secretName: ""
   # The XSRF key. Will be generated automatically if it isn't specified
   xsrfKey: ""
+  # Fill the name of a kubernetes secret if you want to use your own
+  # TLS certificate and private key for token encryption/decryption.
+  # "tls.crt" - the certificate
+  # "tls.key" - the private key
+  certSecretName: ""
 
 jobservice:
   image:
@@ -355,6 +360,11 @@ jobservice:
   # If a secret key is not specified, Helm will generate one.
   # Must be a string of 16 chars.
   secret: ""
+  # Fill the name of a kubernetes secret, if you don't want this chart to
+  # generate one.
+  # If specified, a jobservice secret will not be generated.
+  # If this is set, secret should not be set.
+  secretName: ""
 
 registry:
   registry:
@@ -387,6 +397,11 @@ registry:
   # If a secret key is not specified, Helm will generate one.
   # Must be a string of 16 chars.
   secret: ""
+  # Fill the name of a kubernetes secret, if you don't want this chart to
+  # generate one.
+  # If specified, a registry secret will not be generated.
+  # If this is set, secret should not be set.
+  secretName: ""
   # If true, the registry returns relative URLs in Location headers. The client is responsible for resolving the correct URL.
   relativeurls: false
   middleware:
@@ -418,6 +433,10 @@ chartmuseum:
   affinity: {}
   ## Additional deployment annotations
   podAnnotations: {}
+  # Fill the name of a kubernetes secret, if you don't want this chart to
+  # generate one.
+  # If specified, a chartmuseum secret will not be generated.
+  secretName: ""
 
 clair:
   enabled: true
@@ -501,6 +520,11 @@ database:
     nodeSelector: {}
     tolerations: []
     affinity: {}
+    # Fill the name of a kubernetes secret, if you don't want this chart to
+    # generate one.
+    # If specified, a database secret will not be generated.
+    # If this is set, secret should not be set.
+    secretName: ""
   external:
     host: "192.168.0.1"
     port: "5432"
